@@ -17,7 +17,7 @@ export class ExportService {
   constructor(private http: HttpClient) { }
 
   startLongProcess() {
-    return this.http.post('http://localhost:3000/new-process', {});
+    return this.http.post<{ id: string}>('http://localhost:3000/new-process', {});
   }
 
   getStatus(id: string): Observable<IReportExportStatusTracker> {
@@ -29,13 +29,16 @@ export class ExportService {
     return interval(this.pollingInterval)
     .pipe(
       switchMap(() => this.getStatus(id)),
+      // takeWhile stops the observable once it matches so we can't put the test in there otherwise we never see 100%
       takeWhile(() => !isDone),
-      tap((status) => isDone = status.progress === 100)
+      // Putting the tap AFTER takeWhile means that it will send the final step then complete
+      tap((status) => isDone = status.progress === 100),
+      tap(console.log) // Can remove, just to show it is completing
     );
   }
 
   startAndSubscribeAllAtOnce(): Observable<IReportExportStatusTracker> {
-    return this.http.post<{ id: string }>('http://localhost:3000/new-process', {})
+    return this.startLongProcess()
     .pipe(
       switchMap(response => this.subscribeToExportStatus(response.id))
     );

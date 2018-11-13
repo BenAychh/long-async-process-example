@@ -15,6 +15,7 @@ app.post('/new-process', (req, res) => {
 })
 
 app.get('/status/:id', (req, res) => {
+  // Simulate a longer http call
   setTimeout(() => {
     const status = getStatus(req.params.id);
     res.json(status);
