@@ -1,0 +1,45 @@
+<h1>Original Setup</h1>
+<div>
+  <button mat-raised-button (click)="start()">Start Long Process</button>
+
+  <div *ngIf="status$ | async as status">
+    <mat-progress-spinner
+      color="primary"
+      mode="determinate"
+      [value]="status.progress">
+    </mat-progress-spinner>
+    <a *ngIf="status.downloadLink" [href]="status.downloadLink" download mat-raised-button color="primary">Give me my stuff</a>
+  </div>
+</div>
+
+<h1>Starting and Subscribing all at once </h1>
+<h3>(This is actually how I would probably do it - probably need some error handling though)</h3>
+<div>
+  <button mat-raised-button (click)="startAllAtOnce()">Start Long Process</button>
+
+  <div *ngIf="allAtOnceStatus$ | async as status">
+    <mat-progress-spinner
+      color="primary"
+      mode="determinate"
+      [value]="status.progress">
+    </mat-progress-spinner>
+    <a *ngIf="status.downloadLink" [href]="status.downloadLink" download mat-raised-button color="primary">Give me my stuff</a>
+  </div>
+</div>
+
+<h1>Starting multiple long processes</h1>
+<div>
+  <div>
+    <button mat-raised-button (click)="addLongProcess()">Add Long Process</button>
+  </div>
+  <div class="something-inline" *ngFor="let status$ of arrayOfStatus">
+    <div *ngIf="status$ | async as status"> <!-- ngIf isn't needed here but keeps me from having to write | async over and over again -->
+      <mat-progress-spinner
+        color="primary"
+        mode="determinate"
+        [value]="status.progress">
+      </mat-progress-spinner>
+      <a *ngIf="status.downloadLink" [href]="status.downloadLink" download mat-raised-button color="primary">Give me my stuff</a>
+    </div>
+  </div>
+</div>

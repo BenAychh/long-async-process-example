@@ -1,7 +1,11 @@
 const express = require('express')
+const uuidv4 = require('uuid/v4');
+const cors = require('cors')
+
+
 const app = express()
 const port = 3000
-const uuidv4 = require('uuid/v4');
+app.use(cors())
 
 const db = {};
 
